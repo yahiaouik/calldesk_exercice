@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getCallsFromAPI } from '../apiCaller'
+import { getCallsFromAPI } from '../services/apiCaller'
 
 export const callbotSlice = createSlice({
   name: 'callbot',

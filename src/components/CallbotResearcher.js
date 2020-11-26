@@ -11,7 +11,6 @@ import {
     selectCalls
 } from '../app/callbotSlice';
 
-
 export function CallbotResearcher() {
     const dispatch = useDispatch();
     const calls = useSelector(selectCalls);
@@ -53,16 +52,12 @@ export function CallbotResearcher() {
     );
 }
 
-/*<Grid item xs={12}>
-                <div>{calls != null ? (
-                    <span>Total calls {calls.length}</span>
-                ) : <span> PAS DE CALL</span>}</div>
-            </Grid>*/
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {
         flexGrow: 1,
         display: 'table',
+        height: '38%',
         justifyContent: 'center',
         borderRight: '1px solid #ECF0EF',
         borderBottom: '1px solid #ECF0EF',

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getRecordingFromAPI, getTranscriptFromAPI } from '../apiCaller'
+import { getRecordingFromAPI, getTranscriptFromAPI } from '../services/apiCaller'
 
 export const callSlice = createSlice({
   name: 'call',
@@ -10,7 +10,7 @@ export const callSlice = createSlice({
     calledNumber: null,
     callerNumber: null,
     recording: null,
-    transcript: []
+    transcript: [],
   },
   reducers: {
     setSessionId: (state, action) => {
@@ -19,13 +19,13 @@ export const callSlice = createSlice({
     setDiscussionStartTime: (state, action) => {
       state.discussionStartTime = action.payload;
     },
-    setCallDuration:(state,action) =>{
+    setCallDuration: (state, action) => {
       state.callDuration = action.payload;
     },
-    setCalledNumber: (state,action) => {
+    setCalledNumber: (state, action) => {
       state.calledNumber = action.payload;
     },
-    setCallerNumber: (state,action) => {
+    setCallerNumber: (state, action) => {
       state.callerNumber = action.payload;
     },
     setRecording: (state, action) => {
@@ -33,23 +33,35 @@ export const callSlice = createSlice({
     },
     setTranscript: (state, action) => {
       state.transcript = action.payload;
+    },
+    ressourceIsAvailable: (state, action) => {
+      state.transcript = action.payload;
     }
   },
 });
 
-export const { setSessionId, setDiscussionStartTime, setCallDuration,setCalledNumber,setCallerNumber, setRecording, setTranscript } = callSlice.actions;
+export const { setSessionId, setDiscussionStartTime, setCallDuration, setCalledNumber, setCallerNumber, setRecording, setTranscript } = callSlice.actions;
 
-const getRecording = () => async (dispatch,getState) => {
-  const response = await getRecordingFromAPI(getState().callbot.callbotName,getState().call.sessionId,getState().call.discussionStartTime);
-  dispatch(setRecording(response.data.payload.url));
+const getRecording = () => async (dispatch, getState) => {
+  try {
+    const response = await getRecordingFromAPI(getState().callbot.callbotName, getState().call.sessionId, getState().call.discussionStartTime);
+    dispatch(setRecording(response.data.payload.url));
+  } catch (e) {
+    dispatch(setRecording(null));
+  }
 }
 
-const getTranscript = () => async (dispatch,getState) => {
-    const response = await getTranscriptFromAPI(getState().callbot.callbotName,getState().call.sessionId,getState().call.discussionStartTime);
+const getTranscript = () => async (dispatch, getState) => {
+  try {
+    const response = await getTranscriptFromAPI(getState().callbot.callbotName, getState().call.sessionId, getState().call.discussionStartTime);
     dispatch(setTranscript(response.data.payload));
+  } catch (e) {
+    dispatch(setTranscript([]));
   }
 
-export const setCall = (call) => (dispatch) =>{
+}
+
+export const setCall = (call) => (dispatch) => {
   dispatch(setSessionId(call.sessionId));
   dispatch(setDiscussionStartTime(call.discussionStartTime));
   dispatch(setCallDuration(call.callDuration));

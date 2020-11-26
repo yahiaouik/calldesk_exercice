@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import { CallbotResearcher } from './components/CallbotResearcher';
 import Grid from '@material-ui/core/Grid';
 import { CallList } from './components/CallList';
@@ -16,13 +15,13 @@ function App() {
         <Grid item xs={12} className={classes.header}>
           <AppHeader />
         </Grid>
-        <Hidden mdDown>
-          <Grid item xs={2} className={classes.containers}>
-            <CallbotResearcher />
+        <Hidden smDown>
+          <Grid item sm={2} md={2} lg={2} xs={2} className={classes.containers}>
+            <CallbotResearcher/>
             <CallList />
           </Grid>
         </Hidden>
-        <Grid item lg={10} md={12} sm={12} xs={12}  className={classes.containers}>
+        <Grid item sm={12} md={10} xs={12} className={classes.containers}>
           <Call />
         </Grid>
         <Grid item xs={12} className={classes.footer}>
@@ -39,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     position: "absolute",
     left: "0",
-    overflow: "auto"
+    overflow: "auto",
 
   },
   header: {

@@ -2,17 +2,20 @@ import { Grid } from '@material-ui/core';
 import AudioPlayer from 'material-ui-audio-player';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
+import ErrorIcon from '@material-ui/icons/Error';
 import {
     selectCallerNumer,
     selectRecording,
     selectTranscript,
     selectDiscussionStartTime,
-    selectCallDuration
+    selectCallDuration,
+    selectSessionId
 } from '../app/callSlice'
 
 export function Call() {
     const recording = useSelector(selectRecording);
     const transcript = useSelector(selectTranscript);
+    const sessionId = useSelector(selectSessionId);
     const discussionStartTime = useSelector(selectDiscussionStartTime);
     const callDuration = useSelector(selectCallDuration);
     const classes = useStyles();
@@ -45,21 +48,34 @@ export function Call() {
                     </Grid>
                 </Grid>
             </Grid>
-            <Grid item className={classes.audio}>
-                <AudioPlayer download={true} spacing={2} src={recording} />
+            <Grid item className={classes.audio}>{
+                recording !== null || sessionId === null ?
+                    <AudioPlayer download={true} spacing={2} src={recording} />
+                    : <div style={{ textAlign: 'center', position: 'relative', width: '100%', height: '100%' }}>
+                        <ErrorIcon className={classes.errorLogo}/>
+                        <span className={classes.error}> SORRY WE CANNOT FIND RECORDING FOR THIS CALL </span>
+                    </div>
+            }
             </Grid>
             <Grid item className={classes.bubblesContainer}>{
-                transcript.length > 0 ?
+                sessionId !== null ?
+                (transcript.length > 0 ?
                     transcript.map((ts, index) => {
                         var bubbleStyle = (ts.speaker === 'bot' ? classes.botBubble : classes.speakerBubble)
                         return (
                             <div key={index} className={classes.bubbleContainer} >
-                                <span className={bubbleStyle} > {ts.say}</span>
-
+                                <span className={bubbleStyle}> {ts.say}</span>
                             </div>
                         )
                     })
-                    : <div style={{ textAlign: 'center', position: 'relative' }}><span className={classes.error}> SORRY WE CANNOT FIND RECORDING OR TRANSCRIPT FOR THIS CALL </span></div>}
+                    : <div style={{ textAlign: 'center', position: 'relative', width: '100%', height: '100%'}}> 
+                    <ErrorIcon className={classes.errorLogo}/>
+                    <span className={classes.error}> SORRY WE CANNOT FIND TRANSCRIPT FOR THIS CALL </span>
+                    </div>)
+                    :<div style={{ textAlign: 'center', position: 'relative', width: '100%', height: '100%'}}> 
+                     <span className={classes.error}> Welcome to my app, please select a bot and then select a call to listen to it and read its transcription</span>
+               </div>
+                }
             </Grid>
         </Grid>
     );
@@ -69,7 +85,8 @@ const useStyles = makeStyles(() => ({
     root: {
         flexGrow: 1,
         width: '100%',
-        height: '100%',
+        height: '100%'
+
     },
     info: {
         flexGrow: 1,
@@ -161,11 +178,9 @@ const useStyles = makeStyles(() => ({
         color: '#3F51B5',
         fontSize: 'large',
     },
-    verticalCenter: {
-    margin: '0',
-    position: 'absolute',
-    top: '50%',
-    msTransform: 'translateY(-50%)',
-    transform: 'translateY(-50%)'
-}
-    }));
+    errorLogo: {
+        color: '#3F51B5',
+        width: '100%',
+        height: '50%'
+    }
+}));
