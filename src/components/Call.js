@@ -3,6 +3,8 @@ import AudioPlayer from 'material-ui-audio-player';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import ErrorIcon from '@material-ui/icons/Error';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import img from '../ressources/phone_man.png';
 import {
     selectCallerNumer,
     selectRecording,
@@ -11,6 +13,7 @@ import {
     selectCallDuration,
     selectSessionId
 } from '../app/callSlice'
+import { selectLoader } from '../app/utilSlice';
 
 export function Call() {
     const recording = useSelector(selectRecording);
@@ -18,6 +21,7 @@ export function Call() {
     const sessionId = useSelector(selectSessionId);
     const discussionStartTime = useSelector(selectDiscussionStartTime);
     const callDuration = useSelector(selectCallDuration);
+    const loader = useSelector(selectLoader);
     const classes = useStyles();
     var date = discussionStartTime ? new Date(discussionStartTime) : null;
     var duration = callDuration ? new Date(callDuration * 1000) : null;
@@ -44,38 +48,58 @@ export function Call() {
                         duration &&
                         <span className={classes.right}>{duration.getMinutes()}:{duration.getSeconds()}s</span>
                     }
-
                     </Grid>
                 </Grid>
             </Grid>
             <Grid item className={classes.audio}>{
                 recording !== null || sessionId === null ?
                     <AudioPlayer download={true} spacing={2} src={recording} />
-                    : <div style={{ textAlign: 'center', position: 'relative', width: '100%', height: '100%' }}>
-                        <ErrorIcon className={classes.errorLogo}/>
-                        <span className={classes.error}> SORRY WE CANNOT FIND RECORDING FOR THIS CALL </span>
-                    </div>
+                    : <Grid container>
+                        <Grid item xs={4} className={classes.center}>
+                            <ErrorIcon className={classes.logo} />
+                        </Grid>
+                        <Grid item xs={8}>
+                            <span className={classes.error}> SORRY WE CANNOT FIND RECORDING FOR THIS CALL </span>
+                        </Grid>
+
+                    </Grid>
             }
             </Grid>
             <Grid item className={classes.bubblesContainer}>{
-                sessionId !== null ?
-                (transcript.length > 0 ?
-                    transcript.map((ts, index) => {
-                        var bubbleStyle = (ts.speaker === 'bot' ? classes.botBubble : classes.speakerBubble)
-                        return (
-                            <div key={index} className={classes.bubbleContainer} >
-                                <span className={bubbleStyle}> {ts.say}</span>
-                            </div>
+                loader ?
+                    <div style={{ textAlign: 'center' }} >
+                        <CircularProgress className={classes.loader} />
+                    </div>
+                    :
+                    (sessionId !== null ?
+                        (transcript.length > 0 ?
+                            transcript.map((ts, index) => {
+                                var bubbleStyle = (ts.speaker === 'bot' ? classes.botBubble : classes.speakerBubble)
+                                return (
+                                    <div key={index} className={classes.bubbleContainer} >
+                                        <span className={bubbleStyle}> {ts.say}</span>
+                                    </div>
+                                )
+                            })
+                            : <Grid container>
+                                <Grid item xs={12} className={classes.center}>
+                                    <img src={img} className={classes.img} alt="" />
+                                </Grid>
+                                <Grid item xs={12} className={classes.center}>
+                                    <span className={classes.error}> SORRY WE CANNOT FIND TRANSCRIPT FOR THIS CALL </span>
+                                </Grid>
+                            </Grid>
                         )
-                    })
-                    : <div style={{ textAlign: 'center', position: 'relative', width: '100%', height: '100%'}}> 
-                    <ErrorIcon className={classes.errorLogo}/>
-                    <span className={classes.error}> SORRY WE CANNOT FIND TRANSCRIPT FOR THIS CALL </span>
-                    </div>)
-                    :<div style={{ textAlign: 'center', position: 'relative', width: '100%', height: '100%'}}> 
-                     <span className={classes.error}> Welcome to my app, please select a bot and then select a call to listen to it and read its transcription</span>
-               </div>
-                }
+                        : <Grid container>
+                            <Grid item xs={12} className={classes.center}>
+                                <img src={img} className={classes.img} alt="" />
+                            </Grid>
+                            <Grid item xs={12} className={classes.center}>
+                                <span className={classes.error}> Welcome to my app, please select a bot and then select a call to listen to it and read its transcription</span>
+                            </Grid>
+
+                        </Grid>
+                    )}
             </Grid>
         </Grid>
     );
@@ -177,10 +201,23 @@ const useStyles = makeStyles(() => ({
     error: {
         color: '#3F51B5',
         fontSize: 'large',
+        marginTop: '30px',
+        padding: '30px'
     },
-    errorLogo: {
+    img: {
+        width: '250px',
+        height: '300px',
+    },
+    logo:{
         color: '#3F51B5',
+        float: 'right'
+    },
+    loader: {
         width: '100%',
-        height: '50%'
+        height: '100%',
+        textAlign: 'center'
+    },
+    center: {
+        textAlign: 'center'
     }
 }));

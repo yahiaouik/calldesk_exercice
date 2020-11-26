@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getRecordingFromAPI, getTranscriptFromAPI } from '../services/apiCaller'
+import { getRecordingFromAPI, getTranscriptFromAPI } from '../services/apiCaller';
+import { setLoader } from '../app/utilSlice';
 
 export const callSlice = createSlice({
   name: 'call',
@@ -62,6 +63,7 @@ const getTranscript = () => async (dispatch, getState) => {
 }
 
 export const setCall = (call) => (dispatch) => {
+  dispatch(setLoader(true));
   dispatch(setSessionId(call.sessionId));
   dispatch(setDiscussionStartTime(call.discussionStartTime));
   dispatch(setCallDuration(call.callDuration));
@@ -69,6 +71,7 @@ export const setCall = (call) => (dispatch) => {
   dispatch(setCallerNumber(call.callerNumber));
   dispatch(getRecording());
   dispatch(getTranscript());
+  dispatch(setLoader(false));
 }
 
 export const selectSessionId = state => state.call.sessionId;

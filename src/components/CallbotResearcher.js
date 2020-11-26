@@ -3,17 +3,22 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import SearchIcon from '@material-ui/icons/Search';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 import {
     setCallbotName,
     setTimeStampStart,
     setTimeStampEnd,
+    selectBots,
     getBot,
-    selectCalls
+    selectCallbotName
 } from '../app/callbotSlice';
 
 export function CallbotResearcher() {
     const dispatch = useDispatch();
-    const calls = useSelector(selectCalls);
+    const bots = useSelector(selectBots);
     const classes = useStyles();
     return (
         <Grid container className={classes.root} >
@@ -21,9 +26,18 @@ export function CallbotResearcher() {
                 <span>SELECT A BOT</span>
             </Grid>
             <Grid item xs={12}>
-                <TextField label="Bot ID"
-                    className={classes.researchBar}
-                    onChange={e => dispatch(setCallbotName(e.target.value))} />
+                <FormControl className={classes.researchBar}>
+                    <InputLabel >Bot</InputLabel>
+                    <Select
+                        value={useSelector(selectCallbotName)}
+                        onChange={e => dispatch(setCallbotName(e.target.value))}
+                    >
+                        {bots.map((bot, index) => {
+                           return <MenuItem value={bot} key={index}>{bot}</MenuItem>
+                        })
+                        }
+                    </Select>
+                </FormControl>
             </Grid>
             <Grid item xs={12}>
                 <TextField
@@ -61,7 +75,7 @@ const useStyles = makeStyles(() => ({
         justifyContent: 'center',
         borderRight: '1px solid #ECF0EF',
         borderBottom: '1px solid #ECF0EF',
-        textAlign : 'center',
+        textAlign: 'center',
     }, button: {
         background: '#3F51B5',
         border: 0,
@@ -72,10 +86,10 @@ const useStyles = makeStyles(() => ({
         textAlign: 'center',
         margin: '10px'
     }, researchBar: {
-        width: '90%'
+        width: '90%',
     },
-    title:{
-        background:'#ECF0EF',
+    title: {
+        background: '#ECF0EF',
         padding: '5%',
         color: '#3F51B5',
     },
