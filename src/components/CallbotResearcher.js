@@ -16,13 +16,17 @@ import {
     selectCallbotName
 } from '../app/callbotSlice';
 
+// Component CallbotResearcher is the graphical representation of a research form
+// It allows users to research calls from a specific bot on a specific period of time
 export function CallbotResearcher() {
+
     const dispatch = useDispatch();
     const bots = useSelector(selectBots);
+
     const classes = useStyles();
     return (
-        <Grid container className={classes.root} >
-            <Grid item xs={12} className={classes.title} >
+        <Grid container className={classes.root}>
+            <Grid item xs={12} className={classes.title}>
                 <span>SELECT A BOT</span>
             </Grid>
             <Grid item xs={12}>
@@ -33,7 +37,7 @@ export function CallbotResearcher() {
                         onChange={e => dispatch(setCallbotName(e.target.value))}
                     >
                         {bots.map((bot, index) => {
-                           return <MenuItem value={bot} key={index}>{bot}</MenuItem>
+                            return <MenuItem value={bot} key={index}>{bot}</MenuItem>
                         })
                         }
                     </Select>

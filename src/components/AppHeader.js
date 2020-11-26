@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import PhoneIcon from '@material-ui/icons/Phone';
 
+// Component AppHeader is the graphical representation of the app header
 export function AppHeader() {
   const classes = useStyles();
 
@@ -15,10 +16,10 @@ export function AppHeader() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton className={classes.menuButton}>
             <PhoneIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography className={classes.title}>
             CallBot APP
           </Typography>
         </Toolbar>
@@ -27,6 +28,7 @@ export function AppHeader() {
   );
 }
 
+// CSS part of the component
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,

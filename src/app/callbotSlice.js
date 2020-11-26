@@ -2,6 +2,8 @@ import { createSlice } from '@reduxjs/toolkit';
 import { getCallsFromAPI } from '../services/apiCaller';
 import { setLoader } from '../app/utilSlice';
 
+// Part of the store that represente callbot research
+
 export const callbotSlice = createSlice({
   name: 'callbot',
   initialState: {
@@ -29,6 +31,7 @@ export const callbotSlice = createSlice({
 
 export const { setCallbotName, setTimeStampStart, setTimeStampEnd, setCalls } = callbotSlice.actions;
 
+// Get callbot calls (call api service)
 export const getBot = () => async (dispatch, getState) => {
   try {
     if (getState().callbot.callbotName !== "") {
@@ -37,14 +40,15 @@ export const getBot = () => async (dispatch, getState) => {
       dispatch(setCalls(response.data.payload.calls));
       dispatch(setLoader(false));
     }
-  } catch{
+  } catch {
     dispatch(setLoader(false));
   };
 }
 
-
+// State selectors
 export const selectCallbotName = state => state.callbot.callbotName;
 export const selectTime = state => state.callbot.timeStampStart;
 export const selectCalls = state => state.callbot.calls;
 export const selectBots = state => state.callbot.bots;
+
 export default callbotSlice.reducer;

@@ -7,6 +7,10 @@ import { selectCalls } from '../app/callbotSlice';
 import { setCall } from '../app/callSlice';
 import { Grid } from '@material-ui/core';
 
+// Component CallList is the graphical representation of a list of calls
+// It allows users to know how many calls contains a specific bot on a specific period of time
+// It allows users to select a specific call and then see its informations
+
 export function CallList() {
     const selector = useSelector(selectCalls);
     const calls = useSelector(selectCalls);
@@ -49,7 +53,7 @@ export function CallList() {
     );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {
         overflowY: 'auto',
         overflowX: 'hidden',

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+// Part of the store that represente util components (here a loader)
 export const utilSlice = createSlice({
   name: 'util',
   initialState: {
@@ -14,6 +15,7 @@ export const utilSlice = createSlice({
 
 export const {setLoader} = utilSlice.actions;
 
+// State selectors
 export const selectLoader = state => state.util.loader;
 
 export default utilSlice.reducer;
