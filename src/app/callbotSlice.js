@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getCallsFromAPI } from '../services/apiCaller';
 import { setLoader } from '../app/utilSlice';
+import { resetCall } from '../app/callSlice';
 
 // Part of the store that represente callbot research
 
@@ -39,6 +40,7 @@ export const getBot = () => async (dispatch, getState) => {
       const response = await getCallsFromAPI(getState().callbot.callbotName, getState().callbot.timeStampStart, getState().callbot.timeStampEnd);
       dispatch(setCalls(response.data.payload.calls));
       dispatch(setLoader(false));
+      dispatch(resetCall());
     }
   } catch {
     dispatch(setLoader(false));

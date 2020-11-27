@@ -23,11 +23,15 @@ export function Call() {
     const recording = useSelector(selectRecording);
     const transcript = useSelector(selectTranscript);
     const sessionId = useSelector(selectSessionId);
-    const discussionStartTime = useSelector(selectDiscussionStartTime);
-    const callDuration = useSelector(selectCallDuration);
+    let discussionStartTime = useSelector(selectDiscussionStartTime);
+    let callDuration = useSelector(selectCallDuration);
     const loader = useSelector(selectLoader);
+    const callerNumer= useSelector(selectCallerNumer)
 
     const classes = useStyles();
+
+    discussionStartTime = discussionStartTime ? new Date(discussionStartTime) : null;
+    callDuration = callDuration ? new Date(callDuration * 1000) : null;
 
     return (
         <Grid container className={classes.root}>
@@ -37,19 +41,19 @@ export function Call() {
                 </div>
                 <Grid container>
                     <Grid item xs={6}>{
-                        discussionStartTime && <span className={classes.left} style={{ fontSize: 'large' }} >{discussionStartTime.getHours()}h{discussionStartTime.getMinutes()}</span>
+                        discussionStartTime && <span className={classes.left} style={{ fontSize: 'large' }} >{String(discussionStartTime.getHours()).padStart(2, "0")}h{String(discussionStartTime.getMinutes()).padStart(2, "0")}</span>
                     }
                     </Grid>
                     <Grid item xs={6}>
-                        <span className={classes.right} style={{ fontSize: 'large' }}>{useSelector(selectCallerNumer)}</span>
+                        <span className={classes.right} style={{ fontSize: 'large' }}>{callerNumer}</span>
                     </Grid>
                     <Grid item xs={6}>{
-                        discussionStartTime && <span className={classes.left}>{discussionStartTime.getDate()}/{discussionStartTime.getMonth()}/{discussionStartTime.getFullYear()}</span>
+                        discussionStartTime && <span className={classes.left}>{String(discussionStartTime.getDate()).padStart(2, "0")}/{String(discussionStartTime.getMonth()).padStart(2, "0")}/{String(discussionStartTime.getFullYear()).padStart(2, "0")}</span>
                     }
                     </Grid>
                     <Grid item xs={6} >{
                         callDuration &&
-                        <span className={classes.right}>{callDuration.getMinutes()}:{callDuration.getSeconds()}s</span>
+                        <span className={classes.right}>{callDuration.getMinutes()}:{String(callDuration.getSeconds()).padStart(2, "0")}s</span>
                     }
                     </Grid>
                 </Grid>

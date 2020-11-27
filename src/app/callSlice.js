@@ -21,11 +21,11 @@ export const callSlice = createSlice({
     },
     setDiscussionStartTime: (state, action) => {
       console.log(action);
-      state.discussionStartTime = new Date (action.payload);
+      state.discussionStartTime = action.payload;
     },
     setCallDuration: (state, action) => {
       console.log(action);
-      state.callDuration = new Date(action.payload * 1000);
+      state.callDuration = action.payload;
     },
     setCalledNumber: (state, action) => {
       state.calledNumber = action.payload;
@@ -41,11 +41,20 @@ export const callSlice = createSlice({
     },
     ressourceIsAvailable: (state, action) => {
       state.transcript = action.payload;
+    },
+    resetCall: (state) => {
+      state.sessionId = null;
+      state.discussionStartTime = null;
+      state.callDuration = null;
+      state.calledNumber = null;
+      state.callerNumber = null;
+      state.recording = null;
+      state.transcript = [];
     }
   },
 });
 
-export const { setSessionId, setDiscussionStartTime, setCallDuration, setCalledNumber, setCallerNumber, setRecording, setTranscript } = callSlice.actions;
+export const { setSessionId, setDiscussionStartTime, setCallDuration, setCalledNumber, setCallerNumber, setRecording, setTranscript, resetCall } = callSlice.actions;
 
 // Get call recorging (call api service)
 const getRecording = () => async (dispatch, getState) => {
