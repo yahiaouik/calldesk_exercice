@@ -66,7 +66,7 @@ export function Call() {
                             <ErrorIcon className={classes.logo} />
                         </Grid>
                         <Grid item xs={8}>
-                            <span className={classes.error}> SORRY WE CANNOT FIND RECORDING FOR THIS CALL </span>
+                            <span className={classes.error}> SORRY ! WE CANNOT FIND RECORDING FOR THIS CALL </span>
                         </Grid>
                     </Grid>
             }
@@ -92,7 +92,7 @@ export function Call() {
                                     <img src={img} className={classes.img} alt="" />
                                 </Grid>
                                 <Grid item xs={12} className={classes.center}>
-                                    <span className={classes.error}> SORRY WE CANNOT FIND TRANSCRIPT FOR THIS CALL </span>
+                                    <span className={classes.error}> SORRY ! WE CANNOT FIND TRANSCRIPT FOR THIS CALL </span>
                                 </Grid>
                             </Grid>
                         )
@@ -101,7 +101,7 @@ export function Call() {
                                 <img src={img} className={classes.img} alt="" />
                             </Grid>
                             <Grid item xs={12} className={classes.center}>
-                                <span className={classes.error}> Welcome to my app, please select a bot and then select a call to listen to it and read its transcription</span>
+                                <span className={classes.error}> Welcome to my app, please select a bot and then select a call to listen to it and read its transcription.</span>
                             </Grid>
                         </Grid>
                     )}

@@ -45,17 +45,18 @@ export function CallbotResearcher() {
             </Grid>
             <Grid item xs={12}>
                 <TextField
-                    id="date"
                     label="Start Date"
                     type="date"
                     defaultValue="2020-06-01"
                     onChange={event => dispatch(setTimeStampStart(event.target.value))}
+                    className={classes.date}
                 />
                 <TextField
                     label="End Date"
                     type="date"
                     defaultValue="2020-06-30"
                     onChange={event => dispatch(setTimeStampEnd(event.target.value))}
+                    className={classes.date}
                 />
             </Grid>
             <Grid item xs={12}>
@@ -97,5 +98,8 @@ const useStyles = makeStyles(() => ({
         padding: '5%',
         color: '#3F51B5',
     },
+    date: {
+        marginTop: '5px',
+    }
 
 }));
