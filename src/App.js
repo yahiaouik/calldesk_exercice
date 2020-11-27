@@ -17,7 +17,7 @@ function App() {
         </Grid>
         <Hidden smDown>
           <Grid item sm={2} md={2} lg={2} xs={2} className={classes.containers}>
-            <CallbotResearcher/>
+            <CallbotResearcher />
             <CallList />
           </Grid>
         </Hidden>
@@ -25,24 +25,23 @@ function App() {
           <Call />
         </Grid>
         <Grid item xs={12} className={classes.footer}>
-          <a className={classes.link} href="https://www.google.fr/" >GITHUB</a>
+          <a className={classes.link} href="https://github.com/yahiaouik/calldesk_exercice" >Github Repository</a>
         </Grid>
       </Grid>
     </div>
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     width: '100%',
     height: '100%',
     position: "absolute",
     left: "0",
-    overflow: "auto",
-
+    overflow: "auto"
   },
   header: {
-    display: 'table',
+    display: 'table'
   },
   containers: {
     width: '100%',
@@ -53,10 +52,11 @@ const useStyles = makeStyles((theme) => ({
     height: '5%',
     background: '#3f51b5',
     textAlign: 'center',
-    color: 'white',
+    color: 'white'
   },
   link: {
     color: 'white',
+    fontSize: 'x-smaller',
     textDecoration: 'none'
   }
 }));

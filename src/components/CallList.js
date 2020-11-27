@@ -7,6 +7,10 @@ import { selectCalls } from '../app/callbotSlice';
 import { setCall } from '../app/callSlice';
 import { Grid } from '@material-ui/core';
 
+// Component CallList is the graphical representation of a list of calls
+// It allows users to know how many calls contains a specific bot on a specific period of time
+// It allows users to select a specific call and then see its informations
+
 export function CallList() {
     const selector = useSelector(selectCalls);
     const calls = useSelector(selectCalls);
@@ -29,16 +33,16 @@ export function CallList() {
                     return <ListItem button key={call.sessionId} onClick={e => { dispatch(setCall(call)) }}>
                         <Grid container>
                             <Grid item xs={6}>
-                                <span className={classes.left}>{date.getHours()}h{date.getMinutes()}</span>
+                                <span className={classes.left}>{String(date.getHours()).padStart(2, "0")}h{String(date.getMinutes()).padStart(2, "0")}</span>
                             </Grid>
                             <Grid item xs={6}>
                                 <span className={classes.right}>{call.callerNumber}</span>
                             </Grid>
                             <Grid item xs={6}>
-                                <span className={classes.left}>{date.getDate()}/{date.getMonth()}/{date.getFullYear()}</span>
+                                <span className={classes.left}>{String(date.getDate()).padStart(2, "0")}/{String(date.getMonth()).padStart(2, "0")}/{date.getFullYear()}</span>
                             </Grid>
                             <Grid item xs={6} >
-                                <span className={classes.right}>{duration.getMinutes()}:{duration.getSeconds()}s</span>
+                                <span className={classes.right}>{String(duration.getMinutes()).padStart(2, "0")}:{String(duration.getSeconds()).padStart(2, "0")}s</span>
                             </Grid>
                         </Grid>
                     </ListItem>;
@@ -49,7 +53,7 @@ export function CallList() {
     );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {
         overflowY: 'auto',
         overflowX: 'hidden',

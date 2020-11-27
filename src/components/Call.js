@@ -3,6 +3,8 @@ import AudioPlayer from 'material-ui-audio-player';
 import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import ErrorIcon from '@material-ui/icons/Error';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import img from '../ressources/phone_man.png';
 import {
     selectCallerNumer,
     selectRecording,
@@ -11,16 +13,26 @@ import {
     selectCallDuration,
     selectSessionId
 } from '../app/callSlice'
+import { selectLoader } from '../app/utilSlice';
 
+// Component Call is the graphical representation of a call
+// It contains calls informations, the audio player and the transcription chat
 export function Call() {
+    
+    // Get values from state
     const recording = useSelector(selectRecording);
     const transcript = useSelector(selectTranscript);
     const sessionId = useSelector(selectSessionId);
-    const discussionStartTime = useSelector(selectDiscussionStartTime);
-    const callDuration = useSelector(selectCallDuration);
+    let discussionStartTime = useSelector(selectDiscussionStartTime);
+    let callDuration = useSelector(selectCallDuration);
+    const loader = useSelector(selectLoader);
+    const callerNumer= useSelector(selectCallerNumer)
+
     const classes = useStyles();
-    var date = discussionStartTime ? new Date(discussionStartTime) : null;
-    var duration = callDuration ? new Date(callDuration * 1000) : null;
+
+    discussionStartTime = discussionStartTime ? new Date(discussionStartTime) : null;
+    callDuration = callDuration ? new Date(callDuration * 1000) : null;
+
     return (
         <Grid container className={classes.root}>
             <Grid item className={classes.info}>
@@ -29,53 +41,70 @@ export function Call() {
                 </div>
                 <Grid container>
                     <Grid item xs={6}>{
-                        date && <span className={classes.left} style={{ fontSize: 'large' }} >{date.getHours()}h{date.getMinutes()}</span>
+                        discussionStartTime && <span className={classes.left} style={{ fontSize: 'large' }} >{String(discussionStartTime.getHours()).padStart(2, "0")}h{String(discussionStartTime.getMinutes()).padStart(2, "0")}</span>
                     }
-
                     </Grid>
                     <Grid item xs={6}>
-                        <span className={classes.right} style={{ fontSize: 'large' }}>{useSelector(selectCallerNumer)}</span>
+                        <span className={classes.right} style={{ fontSize: 'large' }}>{callerNumer}</span>
                     </Grid>
                     <Grid item xs={6}>{
-                        date && <span className={classes.left}>{date.getDate()}/{date.getMonth()}/{date.getFullYear()}</span>
+                        discussionStartTime && <span className={classes.left}>{String(discussionStartTime.getDate()).padStart(2, "0")}/{String(discussionStartTime.getMonth()).padStart(2, "0")}/{String(discussionStartTime.getFullYear()).padStart(2, "0")}</span>
                     }
                     </Grid>
                     <Grid item xs={6} >{
-                        duration &&
-                        <span className={classes.right}>{duration.getMinutes()}:{duration.getSeconds()}s</span>
+                        callDuration &&
+                        <span className={classes.right}>{callDuration.getMinutes()}:{String(callDuration.getSeconds()).padStart(2, "0")}s</span>
                     }
-
                     </Grid>
                 </Grid>
             </Grid>
             <Grid item className={classes.audio}>{
                 recording !== null || sessionId === null ?
                     <AudioPlayer download={true} spacing={2} src={recording} />
-                    : <div style={{ textAlign: 'center', position: 'relative', width: '100%', height: '100%' }}>
-                        <ErrorIcon className={classes.errorLogo}/>
-                        <span className={classes.error}> SORRY WE CANNOT FIND RECORDING FOR THIS CALL </span>
-                    </div>
+                    : <Grid container>
+                        <Grid item xs={4} className={classes.center}>
+                            <ErrorIcon className={classes.logo} />
+                        </Grid>
+                        <Grid item xs={8}>
+                            <span className={classes.error}> SORRY ! WE CANNOT FIND RECORDING FOR THIS CALL </span>
+                        </Grid>
+                    </Grid>
             }
             </Grid>
             <Grid item className={classes.bubblesContainer}>{
-                sessionId !== null ?
-                (transcript.length > 0 ?
-                    transcript.map((ts, index) => {
-                        var bubbleStyle = (ts.speaker === 'bot' ? classes.botBubble : classes.speakerBubble)
-                        return (
-                            <div key={index} className={classes.bubbleContainer} >
-                                <span className={bubbleStyle}> {ts.say}</span>
-                            </div>
+                loader ?
+                    <div style={{ textAlign: 'center' }} >
+                        <CircularProgress className={classes.center} />
+                    </div>
+                    :
+                    (sessionId !== null ?
+                        (transcript.length > 0 ?
+                            transcript.map((ts, index) => {
+                                var bubbleStyle = (ts.speaker === 'bot' ? classes.botBubble : classes.speakerBubble)
+                                return (
+                                    <div key={index} className={classes.bubbleContainer} >
+                                        <span className={bubbleStyle}> {ts.say}</span>
+                                    </div>
+                                )
+                            })
+                            :<Grid container>
+                                <Grid item xs={12} className={classes.center}>
+                                    <img src={img} className={classes.img} alt="" />
+                                </Grid>
+                                <Grid item xs={12} className={classes.center}>
+                                    <span className={classes.error}> SORRY ! WE CANNOT FIND TRANSCRIPT FOR THIS CALL </span>
+                                </Grid>
+                            </Grid>
                         )
-                    })
-                    : <div style={{ textAlign: 'center', position: 'relative', width: '100%', height: '100%'}}> 
-                    <ErrorIcon className={classes.errorLogo}/>
-                    <span className={classes.error}> SORRY WE CANNOT FIND TRANSCRIPT FOR THIS CALL </span>
-                    </div>)
-                    :<div style={{ textAlign: 'center', position: 'relative', width: '100%', height: '100%'}}> 
-                     <span className={classes.error}> Welcome to my app, please select a bot and then select a call to listen to it and read its transcription</span>
-               </div>
-                }
+                        :<Grid container>
+                            <Grid item xs={12} className={classes.center}>
+                                <img src={img} className={classes.img} alt="" />
+                            </Grid>
+                            <Grid item xs={12} className={classes.center}>
+                                <span className={classes.error}> Welcome to my app, please select a bot and then select a call to listen to it and read its transcription.</span>
+                            </Grid>
+                        </Grid>
+                    )}
             </Grid>
         </Grid>
     );
@@ -101,13 +130,6 @@ const useStyles = makeStyles(() => ({
         color: '#3F51B5',
         width: '98%',
         padding: '1%'
-    },
-    date: {
-        background: '#DEE3E2',
-        color: 'white',
-        borderRadius: '2px',
-        float: 'left',
-        margin: '1%'
     },
     audio: {
         flexGrow: 1,
@@ -177,10 +199,18 @@ const useStyles = makeStyles(() => ({
     error: {
         color: '#3F51B5',
         fontSize: 'large',
+        marginTop: '30px',
+        padding: '30px'
     },
-    errorLogo: {
+    img: {
+        width: '250px',
+        height: '250px',
+    },
+    logo: {
         color: '#3F51B5',
-        width: '100%',
-        height: '50%'
+        float: 'right'
+    },
+    center: {
+        textAlign: 'center'
     }
 }));
